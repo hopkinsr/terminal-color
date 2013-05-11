@@ -1,10 +1,17 @@
 #lang racket
-(provide display-color)
+(provide display-color
+         displayln-color)
 
 (define (display-color text #:fg fg #:bg bg)
   (terminal-colors bg fg #f #f)
   (display text)
   (terminal-reset))
+
+(define (displayln-color text #:fg fg #:bg bg)
+  (terminal-colors bg fg #f #f)
+  (display text)
+  (terminal-reset)
+  (newline))
 
 ; https://github.com/stamourv/roguelike/blob/master/utilities/terminal.rkt
 (define (terminal-command command)

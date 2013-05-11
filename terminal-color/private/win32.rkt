@@ -1,5 +1,6 @@
 #lang racket
-(provide display-color)
+(provide display-color
+         displayln-color)
 
 (require ffi/unsafe
          ffi/unsafe/define)
@@ -57,3 +58,10 @@
   (set-terminal-color! fg bg)
   (display text)
   (reset-terminal-color!))
+
+(define (displayln-color text #:fg fg #:bg bg)
+  (set-terminal-color! fg bg)
+  (display text)
+  (reset-terminal-color!)
+  (newline))
+

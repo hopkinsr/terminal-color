@@ -33,3 +33,12 @@
       [(win32) (load-plug-in win32-file 'display-color)]
       [(off) (load-plug-in off-file 'display-color)]))
   (display-variant text #:fg fg #:bg bg))
+
+(define (displayln-color text #:fg (fg 'default) #:bg (bg 'default))
+  (define displayln-variant
+    (case (current-display-color-mode)
+      [(ansi) (load-plug-in ansi-file 'displayln-color)]
+      [(win32) (load-plug-in win32-file 'displayln-color)]
+      [(off) (load-plug-in off-file 'displayln-color)]))
+  (displayln-variant text #:fg fg #:bg bg))
+
