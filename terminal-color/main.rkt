@@ -21,15 +21,15 @@
 
 (define-namespace-anchor a)
 
-(define (load-plug-in file)
+(define (load-plug-in file proc)
   (let ([ns (namespace-anchor->namespace a)])
     (parameterize ([current-namespace ns])
-      (dynamic-require file 'display-color))))
+      (dynamic-require file proc))))
 
 (define (display-color text #:fg (fg 'default) #:bg (bg 'default))
   (define display-variant
     (case (current-display-color-mode)
-      [(ansi) (load-plug-in ansi-file)]
-      [(win32) (load-plug-in win32-file)]
-      [(off) (load-plug-in off-file)]))
+      [(ansi) (load-plug-in ansi-file 'display-color)]
+      [(win32) (load-plug-in win32-file 'display-color)]
+      [(off) (load-plug-in off-file 'display-color)]))
   (display-variant text #:fg fg #:bg bg))
