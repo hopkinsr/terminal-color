@@ -54,13 +54,13 @@ Only 4 things are provided:
 	It's recommended to use
 
 	```racket
-	(displayln-color "Hello" #:fg 'white #:bg 'white)
+	(displayln-color "Hello" #:fg 'white #:bg 'red)
 	```
 
 	instead of
 
 	```racket
-	(display-color "Hello\n" #:fg 'white #:bg 'white)
+	(display-color "Hello\n" #:fg 'white #:bg 'red)
 	```
 
 	Especially if there is an extra (newline) call immediately afterwards.
