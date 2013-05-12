@@ -1,7 +1,8 @@
 #lang racket/base
 (provide current-display-color-mode
          guess-display-color-mode
-         display-color)
+         display-color
+         displayln-color)
 
 (require racket/runtime-path)
 

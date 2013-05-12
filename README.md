@@ -30,7 +30,7 @@ A Racket library to display colored text to the terminal
 API
 ---
 
-Only 3 things are provided:
+Only 4 things are provided:
 
 * current-display-color-mode
 	A Racket parameter which determines how to output text when display-color
@@ -45,6 +45,25 @@ Only 3 things are provided:
 * display-color text #:fg fg #:bg bg
 	A wrapper for display and optionally sets the foreground and background
 	of the terminal before calling display and resetting it afterwards.
+
+* displayln-color text #:fg fg #:bg bg
+	Conceptually a wrapper for displayln. However, this will ensure the
+	color reset is applied before the (newline) which can be significant
+	on some terminals.
+
+	It's recommended to use
+
+	```racket
+	(displayln-color "Hello" #:fg 'white #:bg 'white)
+	```
+
+	instead of
+
+	```racket
+	(display-color "Hello\n" #:fg 'white #:bg 'white)
+	```
+
+	Especially if there is an extra (newline) call immediately afterwards.
 
 Valid colors
 ------------
