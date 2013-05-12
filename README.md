@@ -9,9 +9,9 @@ A Racket library to display colored text to the terminal
 
 (define (display-test-output title)
   (displayln title)
-  (display-color "1: Default colors\n")
-  (display-color "2: Green\n" #:fg 'green)
-  (display-color "3: White on red\n" #:fg 'white #:bg 'red)
+  (displayln-color "1: Default colors")
+  (displayln-color "2: Green" #:fg 'green)
+  (displayln-color "3: White on red" #:fg 'white #:bg 'red)
   (newline))
 
 (display-test-output "(guess-display-color-mode)")
