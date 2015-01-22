@@ -1,22 +1,16 @@
 #lang racket
 (provide display-color
-         displayln-color)
-
-(define (display-color text #:fg fg #:bg bg)
-  (terminal-colors bg fg #f #f)
-  (display text)
-  (terminal-reset))
-
-(define (displayln-color text #:fg fg #:bg bg)
-  (terminal-colors bg fg #f #f)
-  (display text)
-  (terminal-reset)
-  (newline))
+         displayln-color
+         print-color
+         write-color)
 
 ; https://github.com/stamourv/roguelike/blob/master/utilities/terminal.rkt
 (define (terminal-command command)
   (printf "~a~a" (integer->char #x1b) command))
-(define (terminal-reset) (terminal-command "[0m"))
+
+(define (terminal-reset)
+  (terminal-command "[0m"))
+
 (define (terminal-colors bg fg [bold? #f] [underline? #f])
   (terminal-command
    (format "[~a;~a~a~am"
@@ -34,3 +28,23 @@
              ((default) "39"))
            (if bold?      ";1" "")
            (if underline? ";4" ""))))
+
+(define (output-color output-method text #:fg fg #:bg bg)
+  (terminal-colors bg fg #f #f)
+  (output-method text)
+  (terminal-reset))
+
+(define (display-color text #:fg fg #:bg bg)
+  (output-color display text #:fg fg #:bg bg))
+
+(define (displayln-color text #:fg fg #:bg bg)
+  (terminal-colors bg fg #f #f)
+  (display text)
+  (terminal-reset)
+  (newline))
+
+(define (print-color text #:fg fg #:bg bg)
+  (output-color print text #:fg fg #:bg bg))
+
+(define (write-color text #:fg fg #:bg bg)
+  (output-color write text #:fg fg #:bg bg))

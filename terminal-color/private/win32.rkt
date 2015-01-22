@@ -1,6 +1,8 @@
 #lang racket
 (provide display-color
-         displayln-color)
+         displayln-color
+         print-color
+         write-color)
 
 (require ffi/unsafe
          ffi/unsafe/define)
@@ -54,10 +56,13 @@
 (define (reset-terminal-color!)
   (set-terminal-color! 'white 'black))
 
-(define (display-color text #:fg fg #:bg bg)
+(define (output-color output-method text #:fg fg #:bg bg)
   (set-terminal-color! fg bg)
-  (display text)
+  (output-method text)
   (reset-terminal-color!))
+
+(define (display-color text #:fg fg #:bg bg)
+  (output-color display text #:fg fg #:bg bg))
 
 (define (displayln-color text #:fg fg #:bg bg)
   (set-terminal-color! fg bg)
@@ -65,3 +70,8 @@
   (reset-terminal-color!)
   (newline))
 
+(define (print-color text #:fg fg #:bg bg)
+  (output-color print text #:fg fg #:bg bg))
+
+(define (write-color text #:fg fg #:bg bg)
+  (output-color write text #:fg fg #:bg bg))

@@ -1,10 +1,21 @@
 #lang racket
 (provide display-color
-         displayln-color)
+         displayln-color
+         print-color
+         write-color)
+
+(define (output-color output-method text #:fg fg #:bg bg)
+  (output-method text))
 
 (define (display-color text #:fg fg #:bg bg)
-  (display text))
+  (output-color display text #:fg fg #:bg bg))
 
 (define (displayln-color text #:fg fg #:bg bg)
-  (displayln text))
+  (output-color displayln text #:fg fg #:bg bg))
+
+(define (print-color text #:fg fg #:bg bg)
+  (output-color print text #:fg fg #:bg bg))
+
+(define (write-color text #:fg fg #:bg bg)
+  (output-color write text #:fg fg #:bg bg))
 
