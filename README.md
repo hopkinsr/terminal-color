@@ -3,6 +3,10 @@ terminal-color
 
 A Racket library to output colored text to the terminal on any platform, including Windows.
 
+NOTE: This library is currently in development so things may change before
+v1.0 is released. The current version should be usable on all platforms with
+Racket 5.3.6 and 6.x series. Compatability will try to be kept for existing users.
+
 See the API section for what is provided and further usage instructions.
 
 The short example below defines a helper procedure to output some text and then uses it
