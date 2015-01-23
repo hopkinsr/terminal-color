@@ -1,14 +1,22 @@
 #lang racket/base
-(provide current-output-color-mode
-         guess-output-color-mode
-         display-color
-         displayln-color
-         print-color
-         write-color)
+(require racket/contract)
 
-; backwards compatibility - these were available before v1.0
-(provide current-display-color-mode
-         guess-display-color-mode)
+(provide (contract-out
+          [output-color-mode? (-> any/c boolean?)]
+          [guess-output-color-mode (-> output-color-mode?)]
+          [current-output-color-mode (parameter/c output-color-mode?)]
+          [terminal-color? (-> any/c boolean?)]))
+
+(provide (contract-out
+          [display-color (->* (any/c) (output-port? #:fg terminal-color? #:bg terminal-color?) void?)]
+          [displayln-color (->* (any/c) (output-port? #:fg terminal-color? #:bg terminal-color?) void?)]
+          [print-color (->* (any/c) (output-port? #:fg terminal-color? #:bg terminal-color?) void?)]
+          [write-color (->* (any/c) (output-port? #:fg terminal-color? #:bg terminal-color?) void?)]))
+
+; compatibility: used before v1
+(provide (contract-out
+          [current-display-color-mode (parameter/c output-color-mode?)]
+          [guess-display-color-mode (-> output-color-mode?)]))
 
 (require racket/runtime-path)
 
@@ -16,19 +24,30 @@
 (define-runtime-path ansi-file "private/ansi.rkt")
 (define-runtime-path win32-file "private/win32.rkt")
 
+; compatibility: win32 was used before v1
+(define (output-color-mode? v)
+  (case v
+    [(off ansi win32 windows) #t]
+    [else #f]))
+
 (define (guess-output-color-mode)
   (if (terminal-port? (current-output-port))
       (case (system-type 'os)
         [(unix macosx) 'ansi]
-        [(windows) 'win32]
+        [(windows) 'windows]
         [else 'off])
       'off))
 
 (define current-output-color-mode (make-parameter (guess-output-color-mode)))
 
-; compatibility
-(define current-display-color-mode current-output-color-mode)
-(define guess-display-color-mode guess-output-color-mode)
+(define (terminal-color? v)
+  (case v
+    [(default
+       black white
+       red green blue
+       cyan magenta yellow)
+     #t]
+    [else #f]))
 
 (define-namespace-anchor a)
 
@@ -37,34 +56,38 @@
     (parameterize ([current-namespace ns])
       (dynamic-require file proc))))
 
-(define (display-color text #:fg (fg 'default) #:bg (bg 'default))
+(define (display-color datum [out (current-output-port)] #:fg [fg 'default] #:bg [bg 'default])
   (define display-variant
     (case (current-output-color-mode)
       [(ansi) (load-plug-in ansi-file 'display-color)]
-      [(win32) (load-plug-in win32-file 'display-color)]
+      [(win32 windows) (load-plug-in win32-file 'display-color)]
       [(off) (load-plug-in off-file 'display-color)]))
-  (display-variant text #:fg fg #:bg bg))
+  (display-variant datum out #:fg fg #:bg bg))
 
-(define (displayln-color text #:fg (fg 'default) #:bg (bg 'default))
+(define (displayln-color datum [out (current-output-port)] #:fg [fg 'default] #:bg [bg 'default])
   (define displayln-variant
     (case (current-output-color-mode)
       [(ansi) (load-plug-in ansi-file 'displayln-color)]
-      [(win32) (load-plug-in win32-file 'displayln-color)]
+      [(win32 windows) (load-plug-in win32-file 'displayln-color)]
       [(off) (load-plug-in off-file 'displayln-color)]))
-  (displayln-variant text #:fg fg #:bg bg))
+  (displayln-variant datum out #:fg fg #:bg bg))
 
-(define (print-color text #:fg (fg 'default) #:bg (bg 'default))
+(define (print-color datum [out (current-output-port)] #:fg [fg 'default] #:bg [bg 'default])
   (define print-variant
     (case (current-output-color-mode)
       [(ansi) (load-plug-in ansi-file 'print-color)]
-      [(win32) (load-plug-in win32-file 'print-color)]
+      [(win32 windows) (load-plug-in win32-file 'print-color)]
       [(off) (load-plug-in off-file 'print-color)]))
-  (print-variant text #:fg fg #:bg bg))
+  (print-variant datum out #:fg fg #:bg bg))
 
-(define (write-color text #:fg (fg 'default) #:bg (bg 'default))
+(define (write-color datum [out (current-output-port)] #:fg [fg 'default] #:bg [bg 'default])
   (define write-variant
     (case (current-output-color-mode)
       [(ansi) (load-plug-in ansi-file 'write-color)]
-      [(win32) (load-plug-in win32-file 'write-color)]
+      [(win32 windows) (load-plug-in win32-file 'write-color)]
       [(off) (load-plug-in off-file 'write-color)]))
-  (write-variant text #:fg fg #:bg bg))
+  (write-variant datum out #:fg fg #:bg bg))
+
+; compatibility
+(define current-display-color-mode current-output-color-mode)
+(define guess-display-color-mode guess-output-color-mode)

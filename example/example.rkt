@@ -17,6 +17,11 @@
   (display-test-output "'ansi"))
 
 ; Only run on Windows.
-;(parameterize ([current-display-color-mode 'win32])
-;  (display-test-output "'win32"))
+(when (equal? (system-type 'os) 'windows)
+  (parameterize ([current-display-color-mode 'win32])
+    (display-test-output "'win32")))
 
+(void (call-with-output-string
+       (λ (out)
+         (displayln-color "(current-output-port) and (current-display-color-mode)" #:fg 'cyan)
+         (displayln-color "to output string and (current-display-color-mode)" out #:fg 'cyan))))

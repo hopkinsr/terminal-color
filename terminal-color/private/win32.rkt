@@ -56,22 +56,22 @@
 (define (reset-terminal-color!)
   (set-terminal-color! 'white 'black))
 
-(define (output-color output-method text #:fg fg #:bg bg)
+(define (output-color output-method datum out #:fg fg #:bg bg)
   (set-terminal-color! fg bg)
-  (output-method text)
+  (output-method datum out)
   (reset-terminal-color!))
 
-(define (display-color text #:fg fg #:bg bg)
-  (output-color display text #:fg fg #:bg bg))
+(define (display-color datum out #:fg fg #:bg bg)
+  (output-color display datum out #:fg fg #:bg bg))
 
-(define (displayln-color text #:fg fg #:bg bg)
+(define (displayln-color datum out #:fg fg #:bg bg)
   (set-terminal-color! fg bg)
-  (display text)
+  (display datum out)
   (reset-terminal-color!)
   (newline))
 
-(define (print-color text #:fg fg #:bg bg)
-  (output-color print text #:fg fg #:bg bg))
+(define (print-color datum out #:fg fg #:bg bg)
+  (output-color print datum out #:fg fg #:bg bg))
 
-(define (write-color text #:fg fg #:bg bg)
-  (output-color write text #:fg fg #:bg bg))
+(define (write-color datum out #:fg fg #:bg bg)
+  (output-color write datum out #:fg fg #:bg bg))

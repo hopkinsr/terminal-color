@@ -4,18 +4,18 @@
          print-color
          write-color)
 
-(define (output-color output-method text #:fg fg #:bg bg)
-  (output-method text))
+(define (output-color output-method datum out #:fg fg #:bg bg)
+  (output-method datum out))
 
-(define (display-color text #:fg fg #:bg bg)
-  (output-color display text #:fg fg #:bg bg))
+(define (display-color datum out #:fg fg #:bg bg)
+  (output-color display datum out #:fg fg #:bg bg))
 
-(define (displayln-color text #:fg fg #:bg bg)
-  (output-color displayln text #:fg fg #:bg bg))
+(define (displayln-color datum out #:fg fg #:bg bg)
+  (output-color displayln datum out #:fg fg #:bg bg))
 
-(define (print-color text #:fg fg #:bg bg)
-  (output-color print text #:fg fg #:bg bg))
+(define (print-color datum out #:fg fg #:bg bg)
+  (output-color print datum out #:fg fg #:bg bg))
 
-(define (write-color text #:fg fg #:bg bg)
-  (output-color write text #:fg fg #:bg bg))
+(define (write-color datum out #:fg fg #:bg bg)
+  (output-color write datum out #:fg fg #:bg bg))
 
