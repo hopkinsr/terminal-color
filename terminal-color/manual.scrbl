@@ -51,7 +51,7 @@ in each of the available output color modes.
                                                           
                                                           @itemlist[@item[@racket['off]]
                                                                      @item[@racket['ansi]]
-                                                                     @item[@(deprecated #:what "'win32" "'windows")]
+                                                                     @item[@racket['win32] @(deprecated #:what "'win32" "'windows")]
                                                                      @item[@racket['windows]]]
                                                           }
 
@@ -61,6 +61,11 @@ in each of the available output color modes.
                                                                                                                                       Default value is the result of @code["guess-output-color-mode"].
                                                                                                                                       }
 
+@defparam[current-display-color-mode mode output-color-mode?
+                                     #:value (guess-output-color-mode)]{
+                                                                        @(deprecated #:what "current-display-color-mode" "current-output-color-mode")
+                                                                         }
+
 @defproc[(guess-output-color-mode) output-color-mode?]{
                                                        A helper to provide a sane value for @code["current-output-color-mode"].
                                                                                             
@@ -68,6 +73,10 @@ in each of the available output color modes.
                                                                                             unix-like will use ANSI codes (@racket['ansi]) and Windows will use Win32
                                                                                             API calls (@racket['windows]). Everything else will do nothing (@racket['off]).
                                                                                             }
+
+@defproc[(guess-display-color-mode) output-color-mode?]{
+                                                        @(deprecated #:what "guess-display-color-mode" "guess-output-color-mode")
+                                                         }
 
 @defproc[(terminal-color? [v any/c]) boolean?]{
                                                Returns @racket[#t] if @racket[v] is a valid color, @racket[#f] otherwise.
