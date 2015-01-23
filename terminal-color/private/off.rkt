@@ -13,8 +13,8 @@
 (define (displayln-color datum out #:fg fg #:bg bg)
   (output-color displayln datum out #:fg fg #:bg bg))
 
-(define (print-color datum out #:fg fg #:bg bg)
-  (output-color print datum out #:fg fg #:bg bg))
+(define (print-color datum out quote-depth #:fg fg #:bg bg)
+  (print datum out quote-depth #:fg fg #:bg bg))
 
 (define (write-color datum out #:fg fg #:bg bg)
   (output-color write datum out #:fg fg #:bg bg))

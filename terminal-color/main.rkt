@@ -10,7 +10,7 @@
 (provide (contract-out
           [display-color (->* (any/c) (output-port? #:fg terminal-color? #:bg terminal-color?) void?)]
           [displayln-color (->* (any/c) (output-port? #:fg terminal-color? #:bg terminal-color?) void?)]
-          [print-color (->* (any/c) (output-port? #:fg terminal-color? #:bg terminal-color?) void?)]
+          [print-color (->* (any/c) (output-port? (or/c 0 1) #:fg terminal-color? #:bg terminal-color?) void?)]
           [write-color (->* (any/c) (output-port? #:fg terminal-color? #:bg terminal-color?) void?)]))
 
 ; compatibility: used before v1
@@ -72,13 +72,13 @@
       [(off) (load-plug-in off-file 'displayln-color)]))
   (displayln-variant datum out #:fg fg #:bg bg))
 
-(define (print-color datum [out (current-output-port)] #:fg [fg 'default] #:bg [bg 'default])
+(define (print-color datum [out (current-output-port)] [quote-depth 0] #:fg [fg 'default] #:bg [bg 'default])
   (define print-variant
     (case (current-output-color-mode)
       [(ansi) (load-plug-in ansi-file 'print-color)]
       [(win32 windows) (load-plug-in win32-file 'print-color)]
       [(off) (load-plug-in off-file 'print-color)]))
-  (print-variant datum out #:fg fg #:bg bg))
+  (print-variant datum out quote-depth #:fg fg #:bg bg))
 
 (define (write-color datum [out (current-output-port)] #:fg [fg 'default] #:bg [bg 'default])
   (define write-variant

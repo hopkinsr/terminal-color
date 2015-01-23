@@ -70,8 +70,10 @@
   (reset-terminal-color!)
   (newline))
 
-(define (print-color datum out #:fg fg #:bg bg)
-  (output-color print datum out #:fg fg #:bg bg))
+(define (print-color datum out quote-depth #:fg fg #:bg bg)
+  (set-terminal-color! fg bg)
+  (print datum out quote-depth)
+  (reset-terminal-color!))
 
 (define (write-color datum out #:fg fg #:bg bg)
   (output-color write datum out #:fg fg #:bg bg))

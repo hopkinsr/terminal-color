@@ -109,7 +109,7 @@ in each of the available output color modes.
                                            This is because it will reset the terminal color before the new line as it can be significant on some terminals.
                                            }
 
-@defproc[(print-color [datum any/c] [out output-port? (current-output-port)] [#:fg fg terminal-color? 'default] [#:bg bg terminal-color? 'default])
+@defproc[(print-color [datum any/c] [out output-port? (current-output-port)] [quote-depth (or/c 0 1)] [#:fg fg terminal-color? 'default] [#:bg bg terminal-color? 'default])
          void?]{
                 A wrapper for the standard @code["print"] procedure that will output @racket[datum]
                                            in the requested color if possible followed by resetting the terminal color.

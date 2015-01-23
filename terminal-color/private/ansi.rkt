@@ -43,8 +43,10 @@
   (terminal-reset)
   (newline))
 
-(define (print-color datum out #:fg fg #:bg bg)
-  (output-color print datum out #:fg fg #:bg bg))
+(define (print-color datum out quote-depth #:fg fg #:bg bg)
+  (terminal-colors bg fg #f #f)
+  (print datum out quote-depth)
+  (terminal-reset))
 
 (define (write-color datum out #:fg fg #:bg bg)
   (output-color write datum out #:fg fg #:bg bg))
