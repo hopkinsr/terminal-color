@@ -2,3 +2,6 @@
 *.zo
 *~
 terminal-color/doc
+htmldocs
+pages
+
