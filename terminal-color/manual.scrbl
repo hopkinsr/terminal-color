@@ -3,6 +3,7 @@
 @(require (for-label racket
                      terminal-color))
 
+@author{Richard Hopkins}
 @title{terminal-color}
 
 A Racket library to output colored text to the terminal on any platform, including Windows.
@@ -65,6 +66,20 @@ in each of the available output color modes.
                                      #:value (guess-output-color-mode)]{
                                                                         @(deprecated #:what "current-display-color-mode" "current-output-color-mode")
                                                                          }
+
+@defparam[current-output-color-fg mode terminal-color?
+                                    #:value 'default]{
+                                                                       A parameter that defines the current foreground color used by @code["display-color"], @code["displayln-color"], @code["print-color"], @code["write-color"]
+                                                                                                                                     unless one is explicitly specified.
+                                                                                                                                      Default value is @racket['default].
+                                                                                                                                      }
+
+@defparam[current-output-color-bg mode terminal-color?
+                                    #:value 'default]{
+                                                                       A parameter that defines the current background color used by @code["display-color"], @code["displayln-color"], @code["print-color"], @code["write-color"]
+                                                                                                                                     unless one is explicitly specified.
+                                                                                                                                      Default value is @racket['default].
+                                                                                                                                      }
 
 @defproc[(guess-output-color-mode) output-color-mode?]{
                                                        A helper to provide a sane value for @code["current-output-color-mode"].

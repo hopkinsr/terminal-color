@@ -5,6 +5,8 @@
           [output-color-mode? (-> any/c boolean?)]
           [guess-output-color-mode (-> output-color-mode?)]
           [current-output-color-mode (parameter/c output-color-mode?)]
+          [current-output-color-fg (parameter/c terminal-color?)]
+          [current-output-color-bg (parameter/c terminal-color?)]
           [terminal-color? (-> any/c boolean?)]))
 
 (provide (contract-out
@@ -39,6 +41,8 @@
       'off))
 
 (define current-output-color-mode (make-parameter (guess-output-color-mode)))
+(define current-output-color-fg (make-parameter 'default))
+(define current-output-color-bg (make-parameter 'default))
 
 (define (terminal-color? v)
   (case v
@@ -56,7 +60,7 @@
     (parameterize ([current-namespace ns])
       (dynamic-require file proc))))
 
-(define (display-color datum [out (current-output-port)] #:fg [fg 'default] #:bg [bg 'default])
+(define (display-color datum [out (current-output-port)] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
   (define display-variant
     (case (current-output-color-mode)
       [(ansi) (load-plug-in ansi-file 'display-color)]
@@ -64,7 +68,7 @@
       [(off) (load-plug-in off-file 'display-color)]))
   (display-variant datum out #:fg fg #:bg bg))
 
-(define (displayln-color datum [out (current-output-port)] #:fg [fg 'default] #:bg [bg 'default])
+(define (displayln-color datum [out (current-output-port)] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
   (define displayln-variant
     (case (current-output-color-mode)
       [(ansi) (load-plug-in ansi-file 'displayln-color)]
@@ -72,7 +76,7 @@
       [(off) (load-plug-in off-file 'displayln-color)]))
   (displayln-variant datum out #:fg fg #:bg bg))
 
-(define (print-color datum [out (current-output-port)] [quote-depth 0] #:fg [fg 'default] #:bg [bg 'default])
+(define (print-color datum [out (current-output-port)] [quote-depth 0] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
   (define print-variant
     (case (current-output-color-mode)
       [(ansi) (load-plug-in ansi-file 'print-color)]
@@ -80,7 +84,7 @@
       [(off) (load-plug-in off-file 'print-color)]))
   (print-variant datum out quote-depth #:fg fg #:bg bg))
 
-(define (write-color datum [out (current-output-port)] #:fg [fg 'default] #:bg [bg 'default])
+(define (write-color datum [out (current-output-port)] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
   (define write-variant
     (case (current-output-color-mode)
       [(ansi) (load-plug-in ansi-file 'write-color)]
