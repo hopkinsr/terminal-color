@@ -4,7 +4,7 @@
                      terminal-color))
 
 @author{Richard Hopkins}
-@title[#:version "0.4"]{terminal-color}
+@title[#:version "0.5-dev"]{terminal-color}
 
 A Racket library to output colored text to the terminal on any platform,
 including Windows.
