@@ -4,14 +4,31 @@
                      terminal-color))
 
 @author{Richard Hopkins}
-@title{terminal-color}
+@title[#:version "0.4-dev"]{terminal-color}
 
-A Racket library to output colored text to the terminal on any platform, including Windows.
+A Racket library to output colored text to the terminal on any platform,
+including Windows.
+
+@section{Introduction}
+
+Racket provides several procedures for outputting data, namely
+@racket[display], @racket[displayln], @racket[print] and
+@racket[write]. This library provides a corresponding procedure for each of
+them with the ability to specify what foreground and background color to use.
+
+The signature for these procedures is compatible with the standard ones, as
+the foreground and background colors are specified using optional keyword
+arguments. This means any existing call to the standard procedures can easily
+be modified to use this library as only the name changes.
 
 See the API section for what is provided and further usage instructions.
 
-The short example below defines a helper procedure to output some text and then uses it
-in each of the available output color modes.
+@section{Requirements}
+
+This library is compatible with Racket 5.3.6, 6.x and can be installed using
+the normal raco pkg commands on any platform.
+
+@section{Examples}
 
 @examples[(require racket/port
                    terminal-color)
@@ -33,12 +50,12 @@ in each of the available output color modes.
           
           ; Only run on Windows.
           (when (equal? (system-type 'os) 'windows)
-            (parameterize ([current-output-color-mode 'win32])
-              (display-test-output "'win32")))
+            (parameterize ([current-output-color-mode 'windows])
+              (display-test-output "'windows")))
           
           (void (call-with-output-string
                  (λ (out)
-                   (displayln-color "(current-output-port) and (currentoutput-color-mode)" #:fg 'cyan)
+                   (displayln-color "(current-output-port) and (current-output-color-mode)" #:fg 'cyan)
                    (displayln-color "to output string and (current-output-color-mode)" out #:fg 'cyan))))]
 
 @section{API}
@@ -68,18 +85,18 @@ in each of the available output color modes.
                                                                          }
 
 @defparam[current-output-color-fg mode terminal-color?
-                                    #:value 'default]{
-                                                                       A parameter that defines the current foreground color used by @code["display-color"], @code["displayln-color"], @code["print-color"], @code["write-color"]
-                                                                                                                                     unless one is explicitly specified.
-                                                                                                                                      Default value is @racket['default].
-                                                                                                                                      }
+                                  #:value 'default]{
+                                                    A parameter that defines the current foreground color used by @code["display-color"], @code["displayln-color"], @code["print-color"], @code["write-color"]
+                                                                                                                  unless one is explicitly specified.
+                                                                                                                  Default value is @racket['default].
+                                                                                                                  }
 
 @defparam[current-output-color-bg mode terminal-color?
-                                    #:value 'default]{
-                                                                       A parameter that defines the current background color used by @code["display-color"], @code["displayln-color"], @code["print-color"], @code["write-color"]
-                                                                                                                                     unless one is explicitly specified.
-                                                                                                                                      Default value is @racket['default].
-                                                                                                                                      }
+                                  #:value 'default]{
+                                                    A parameter that defines the current background color used by @code["display-color"], @code["displayln-color"], @code["print-color"], @code["write-color"]
+                                                                                                                  unless one is explicitly specified.
+                                                                                                                  Default value is @racket['default].
+                                                                                                                  }
 
 @defproc[(guess-output-color-mode) output-color-mode?]{
                                                        A helper to provide a sane value for @code["current-output-color-mode"].
@@ -109,13 +126,13 @@ in each of the available output color modes.
                                                                   @item[@racket['yellow]]]
                                                        }
 
-@defproc[(display-color [datum any/c] [out output-port? (current-output-port)] [#:fg fg terminal-color? 'default] [#:bg bg terminal-color? 'default])
+@defproc[(display-color [datum any/c] [out output-port? (current-output-port)] [#:fg fg terminal-color? (current-output-color-fg)] [#:bg bg terminal-color? (current-output-color-bg)])
          void?]{
                 A wrapper for the standard @code["display"] procedure that will output @racket[datum]
                                            in the requested color if possible followed by resetting the terminal color.
                                            }
 
-@defproc[(displayln-color [datum any/c] [out output-port? (current-output-port)] [#:fg fg terminal-color? 'default] [#:bg bg terminal-color? 'default])
+@defproc[(displayln-color [datum any/c] [out output-port? (current-output-port)] [#:fg fg terminal-color? (current-output-color-fg)] [#:bg bg terminal-color? (current-output-color-bg)])
          void?]{
                 A wrapper for the standard @code["displayln"] procedure that will output @racket[datum]
                                            in the requested color if possible followed by resetting the terminal color.
@@ -124,13 +141,13 @@ in each of the available output color modes.
                                            This is because it will reset the terminal color before the new line as it can be significant on some terminals.
                                            }
 
-@defproc[(print-color [datum any/c] [out output-port? (current-output-port)] [quote-depth (or/c 0 1) 0] [#:fg fg terminal-color? 'default] [#:bg bg terminal-color? 'default])
+@defproc[(print-color [datum any/c] [out output-port? (current-output-port)] [quote-depth (or/c 0 1) 0] [#:fg fg terminal-color? (current-output-color-fg)] [#:bg bg terminal-color? (current-output-color-bg)])
          void?]{
                 A wrapper for the standard @code["print"] procedure that will output @racket[datum]
                                            in the requested color if possible followed by resetting the terminal color.
                                            }
 
-@defproc[(write-color [datum any/c] [out output-port? (current-output-port)] [#:fg fg terminal-color? 'default] [#:bg bg terminal-color? 'default])
+@defproc[(write-color [datum any/c] [out output-port? (current-output-port)] [#:fg fg terminal-color? (current-output-color-fg)] [#:bg bg terminal-color? (current-output-color-bg)])
          void?]{
                 A wrapper for the standard @code["write"] procedure that will output @racket[datum]
                                            in the requested color if possible followed by resetting the terminal color.

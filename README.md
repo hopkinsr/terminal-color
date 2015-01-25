@@ -7,7 +7,15 @@ NOTE: This library is currently in development so things may change before
 v1.0 is released. The current version should be usable on all platforms with
 Racket 5.3.6 and 6.x series. Compatability will try to be kept for existing users.
 
-See the API section in the manual for what is provided and further usage instructions.
+Documentation
+-------------
+
+A rendered version of the documentation for this library is available via Github Pages:
+
+* https://hopkinsr.github.io/terminal-color/
+
+Example
+-------
 
 In short this library provides corresponding procedures for the standard display, displayln,
 print and write procedures, allowing you to write things like
