@@ -1,5 +1,5 @@
 #lang setup/infotab
-(define version "0.4-dev")
+(define version "0.4")
 (define collection 'multi)
 (define deps '())
 
