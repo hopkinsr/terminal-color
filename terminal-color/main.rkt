@@ -21,9 +21,9 @@
           [current-display-color-mode (parameter/c output-color-mode?)]
           [guess-display-color-mode (-> output-color-mode?)]))
 
-(define-runtime-path off-file "private/off.rkt")
-(define-runtime-path ansi-file "private/ansi.rkt")
-(define-runtime-path win32-file "private/win32.rkt")
+(define-runtime-path off-plugin-path "private/off.rkt")
+(define-runtime-path ansi-plugin-path "private/ansi.rkt")
+(define-runtime-path windows-plugin-path "private/win32.rkt")
 
 ; compatibility: win32 was used before v1
 (define (output-color-mode? v)
@@ -62,33 +62,33 @@
 (define (display-color datum [out (current-output-port)] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
   (define display-variant
     (case (current-output-color-mode)
-      [(ansi) (load-plug-in ansi-file 'display-color)]
-      [(win32 windows) (load-plug-in win32-file 'display-color)]
-      [(off) (load-plug-in off-file 'display-color)]))
+      [(ansi) (load-plug-in ansi-plugin-path 'display-color)]
+      [(win32 windows) (load-plug-in windows-plugin-path 'display-color)]
+      [(off) (load-plug-in off-plugin-path 'display-color)]))
   (display-variant datum out #:fg fg #:bg bg))
 
 (define (displayln-color datum [out (current-output-port)] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
   (define displayln-variant
     (case (current-output-color-mode)
-      [(ansi) (load-plug-in ansi-file 'displayln-color)]
-      [(win32 windows) (load-plug-in win32-file 'displayln-color)]
-      [(off) (load-plug-in off-file 'displayln-color)]))
+      [(ansi) (load-plug-in ansi-plugin-path 'displayln-color)]
+      [(win32 windows) (load-plug-in windows-plugin-path 'displayln-color)]
+      [(off) (load-plug-in off-plugin-path 'displayln-color)]))
   (displayln-variant datum out #:fg fg #:bg bg))
 
 (define (print-color datum [out (current-output-port)] [quote-depth 0] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
   (define print-variant
     (case (current-output-color-mode)
-      [(ansi) (load-plug-in ansi-file 'print-color)]
-      [(win32 windows) (load-plug-in win32-file 'print-color)]
-      [(off) (load-plug-in off-file 'print-color)]))
+      [(ansi) (load-plug-in ansi-plugin-path 'print-color)]
+      [(win32 windows) (load-plug-in windows-plugin-path 'print-color)]
+      [(off) (load-plug-in off-plugin-path 'print-color)]))
   (print-variant datum out quote-depth #:fg fg #:bg bg))
 
 (define (write-color datum [out (current-output-port)] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
   (define write-variant
     (case (current-output-color-mode)
-      [(ansi) (load-plug-in ansi-file 'write-color)]
-      [(win32 windows) (load-plug-in win32-file 'write-color)]
-      [(off) (load-plug-in off-file 'write-color)]))
+      [(ansi) (load-plug-in ansi-plugin-path 'write-color)]
+      [(win32 windows) (load-plug-in windows-plugin-path 'write-color)]
+      [(off) (load-plug-in off-plugin-path 'write-color)]))
   (write-variant datum out #:fg fg #:bg bg))
 
 ; compatibility
