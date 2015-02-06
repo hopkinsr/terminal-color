@@ -68,7 +68,7 @@
   (set-terminal-color! fg bg)
   (display datum out)
   (reset-terminal-color!)
-  (newline))
+  (newline out))
 
 (define (print-color datum out quote-depth #:fg fg #:bg bg)
   (set-terminal-color! fg bg)
