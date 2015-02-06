@@ -24,7 +24,7 @@
 
 (define-runtime-path off-plugin-path "private/off.rkt")
 (define-runtime-path ansi-plugin-path "private/ansi.rkt")
-(define-runtime-path windows-plugin-path "private/win32.rkt")
+(define-runtime-path windows-plugin-path "private/windows.rkt")
 
 ; compatibility: win32 was used before v1
 (define (output-color-mode? v)
