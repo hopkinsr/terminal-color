@@ -52,10 +52,10 @@
      #t]
     [else #f]))
 
-(define-namespace-anchor a)
+(define-namespace-anchor plugin-anchor)
 
 (define (load-plug-in file proc)
-  (let ([ns (namespace-anchor->namespace a)])
+  (let ([ns (namespace-anchor->namespace plugin-anchor)])
     (parameterize ([current-namespace ns])
       (dynamic-require file proc))))
 
