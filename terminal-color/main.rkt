@@ -1,5 +1,6 @@
 #lang racket/base
-(require racket/contract)
+(require racket/contract
+         racket/runtime-path)
 
 (provide (contract-out
           [output-color-mode? (-> any/c boolean?)]
@@ -19,8 +20,6 @@
 (provide (contract-out
           [current-display-color-mode (parameter/c output-color-mode?)]
           [guess-display-color-mode (-> output-color-mode?)]))
-
-(require racket/runtime-path)
 
 (define-runtime-path off-file "private/off.rkt")
 (define-runtime-path ansi-file "private/ansi.rkt")
