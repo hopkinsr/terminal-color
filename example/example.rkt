@@ -1,5 +1,5 @@
 #lang racket
-(require terminal-color)
+(require "../terminal-color/main.rkt")
 
 (define (display-test-output title)
   (displayln title)
