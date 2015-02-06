@@ -25,3 +25,10 @@
        (λ (out)
          (displayln-color "(current-output-port) and (current-display-color-mode)" #:fg 'cyan)
          (displayln-color "to output string and (current-display-color-mode)" out #:fg 'cyan))))
+
+
+(time
+ (void (for ([i (in-range 1000)])
+         (call-with-output-string
+          (λ (out)
+            (display-color (format "done ~a" i) out #:fg 'yellow))))))
