@@ -1,5 +1,6 @@
 #lang racket/base
 (require racket/contract
+         racket/list
          racket/runtime-path)
 
 (provide (contract-out
@@ -59,36 +60,46 @@
     (parameterize ([current-namespace ns])
       (dynamic-require file proc))))
 
+(struct plugin (mode name method))
+
+(define possible-plugins-to-load
+  (let ([standard-plugins (list `(off ,off-plugin-path)
+                                `(ansi ,ansi-plugin-path))])
+    (if (equal? (system-type 'os) 'windows)
+        (cons `(windows ,windows-plugin-path))
+        standard-plugins)))
+
+(define plugin-cache
+  (for*/list ([p possible-plugins-to-load]
+              [name '(display-color displayln-color print-color write-color)])
+    (let ([mode (first p)]
+          [file (second p)])
+      (plugin mode name (load-plug-in file name)))))
+
+(define (get-cached-plugin name [mode (current-output-color-mode)])
+  (define matching (filter (λ (p)
+                             (and (equal? (plugin-mode p) mode)
+                                  (equal? (plugin-name p) name)))
+                           plugin-cache))
+  (first matching))
+
+(define (get-cached-plugin-method name [mode (current-output-color-mode)])
+  (plugin-method (get-cached-plugin name mode)))
+
 (define (display-color datum [out (current-output-port)] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
-  (define display-variant
-    (case (current-output-color-mode)
-      [(ansi) (load-plug-in ansi-plugin-path 'display-color)]
-      [(win32 windows) (load-plug-in windows-plugin-path 'display-color)]
-      [(off) (load-plug-in off-plugin-path 'display-color)]))
+  (define display-variant (get-cached-plugin-method 'display-color))
   (display-variant datum out #:fg fg #:bg bg))
 
 (define (displayln-color datum [out (current-output-port)] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
-  (define displayln-variant
-    (case (current-output-color-mode)
-      [(ansi) (load-plug-in ansi-plugin-path 'displayln-color)]
-      [(win32 windows) (load-plug-in windows-plugin-path 'displayln-color)]
-      [(off) (load-plug-in off-plugin-path 'displayln-color)]))
+  (define displayln-variant (get-cached-plugin-method 'displayln-color))
   (displayln-variant datum out #:fg fg #:bg bg))
 
 (define (print-color datum [out (current-output-port)] [quote-depth 0] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
-  (define print-variant
-    (case (current-output-color-mode)
-      [(ansi) (load-plug-in ansi-plugin-path 'print-color)]
-      [(win32 windows) (load-plug-in windows-plugin-path 'print-color)]
-      [(off) (load-plug-in off-plugin-path 'print-color)]))
+  (define print-variant (get-cached-plugin-method 'print-color))
   (print-variant datum out quote-depth #:fg fg #:bg bg))
 
 (define (write-color datum [out (current-output-port)] #:fg [fg (current-output-color-fg)] #:bg [bg (current-output-color-bg)])
-  (define write-variant
-    (case (current-output-color-mode)
-      [(ansi) (load-plug-in ansi-plugin-path 'write-color)]
-      [(win32 windows) (load-plug-in windows-plugin-path 'write-color)]
-      [(off) (load-plug-in off-plugin-path 'write-color)]))
+  (define write-variant (get-cached-plugin-method 'write-color))
   (write-variant datum out #:fg fg #:bg bg))
 
 ; compatibility
