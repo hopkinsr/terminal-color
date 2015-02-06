@@ -5,14 +5,14 @@
          write-color)
 
 ; https://github.com/stamourv/roguelike/blob/master/utilities/terminal.rkt
-(define (terminal-command command)
-  (printf "~a~a" (integer->char #x1b) command))
+(define (terminal-command out command)
+  (fprintf out "~a~a" (integer->char #x1b) command))
 
-(define (terminal-reset)
-  (terminal-command "[0m"))
+(define (terminal-reset out)
+  (terminal-command out "[0m"))
 
-(define (terminal-colors bg fg [bold? #f] [underline? #f])
-  (terminal-command
+(define (terminal-colors out bg fg [bold? #f] [underline? #f])
+  (terminal-command out
    (format "[~a;~a~a~am"
            (case bg
              ((black) "40") ((red)     "41")
@@ -30,23 +30,23 @@
            (if underline? ";4" ""))))
 
 (define (output-color output-method datum out #:fg fg #:bg bg)
-  (terminal-colors bg fg #f #f)
+  (terminal-colors out bg fg #f #f)
   (output-method datum out)
-  (terminal-reset))
+  (terminal-reset out))
 
 (define (display-color datum out #:fg fg #:bg bg)
   (output-color display datum out #:fg fg #:bg bg))
 
 (define (displayln-color datum out #:fg fg #:bg bg)
-  (terminal-colors bg fg #f #f)
+  (terminal-colors out bg fg #f #f)
   (display datum out)
-  (terminal-reset)
+  (terminal-reset out)
   (newline out))
 
 (define (print-color datum out quote-depth #:fg fg #:bg bg)
   (terminal-colors bg fg #f #f)
   (print datum out quote-depth)
-  (terminal-reset))
+  (terminal-reset out))
 
 (define (write-color datum out #:fg fg #:bg bg)
   (output-color write datum out #:fg fg #:bg bg))
