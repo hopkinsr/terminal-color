@@ -66,7 +66,7 @@
   (let ([standard-plugins (list `(off ,off-plugin-path)
                                 `(ansi ,ansi-plugin-path))])
     (if (equal? (system-type 'os) 'windows)
-        (cons `(windows ,windows-plugin-path))
+        (cons `(windows ,windows-plugin-path) standard-plugins)
         standard-plugins)))
 
 (define plugin-cache
