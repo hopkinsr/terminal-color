@@ -44,7 +44,7 @@
 (define current-output-color-fg (make-parameter 'default))
 (define current-output-color-bg (make-parameter 'default))
 
-(define (terminal-color? v)
+(define (terminal-8-color? v) ; check if color is one of base 8
   (case v
     [(default
        black white
@@ -53,6 +53,12 @@
      #t]
     [else #f]))
 
+(define (terminal-color? v)
+  (if (and (integer? v) ; check if color is one of 256
+           (and (<= 0 v) (>= 256 v))) 
+      #t
+      (terminal-8-color? v)))
+          
 (define-namespace-anchor plugin-anchor)
 
 (define (load-plug-in file proc)
